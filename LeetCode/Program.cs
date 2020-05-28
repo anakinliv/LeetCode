@@ -17,6 +17,8 @@ namespace LeetCode
             Console.WriteLine(result);
             result = solution.Reverse(1534236469);
             Console.WriteLine(result);
+            result = solution.Reverse(1563847412);
+            Console.WriteLine(result);
         }        
     }
 }
