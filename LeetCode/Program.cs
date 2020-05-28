@@ -7,11 +7,17 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
+            var solution = new Solution();
+            Console.WriteLine(solution.RomanToInt("MCMXCIV"));
+        }
+
+        static void Main7(string[] args)
+        {
             Console.WriteLine("-------------");
             var solution = new Solution();
             var result = solution.Reverse(123);
             Console.WriteLine(result);
-            result = solution.Reverse(-123);
+            result = solution.Reverse(-121);
             Console.WriteLine(result);
             result = solution.Reverse(120);
             Console.WriteLine(result);
