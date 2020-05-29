@@ -36,53 +36,74 @@ public class Solution
             return false;
         }
 
+        public int[] romanValues = new[] {1, 5, 10, 50, 100, 500, 1000};
+
+        public int RomanIndex(char character)
+        {
+            switch (character)
+            {
+                case 'I':
+                    return 0;
+                case 'V':
+                    return 1;
+                case 'X':
+                    return 2;
+                case 'L':
+                    return 3;
+                case 'C':
+                    return 4;
+                case 'D':
+                    return 5;
+                case 'M':
+                    return 6;
+            }
+            return -1;
+        }
+
         public int RomanToInt(string s)
         {
             int result = 0;
             int temp = 0;
+            int lastIndex = 7;
             foreach(var character in s)
             {
-                switch (character)
+                var index = RomanIndex(character);
+                if (lastIndex == 7) lastIndex = index;
+                if (index > lastIndex)
                 {
-                    case 'I':
-                        {
-                            temp += 1;
-                            break;
-                        }
-                    case 'V':
-                        {
-                            temp += 5;
-                            break;
-                        }
-                    case 'X':
-                        {
-                            temp += 10;
-                            break;
-                        }
-                    case 'L':
-                        {
-                            temp += 50;
-                            break;
-                        }
-                    case 'C':
-                        {
-                            temp += 100;
-                            break;
-                        }
-                    case 'D':
-                        {
-                            temp += 500;
-                            break;
-                        }
-                    case 'M':
-                        {
-                            temp += 1000;
-                            break;
-                        }
+                    result -= temp;
+                    temp = romanValues[index];
                 }
+                else if(index==lastIndex)
+                {
+                    temp += romanValues[index];
+                }
+                else
+                {
+                    result += temp;
+                    temp = romanValues[index];
+                }
+                lastIndex = index;
             }
             result += temp;
             return result;
+        }
+
+        public int[] TwoSum(int[] nums, int target)
+        {
+            int delta = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                delta = target - nums[i];
+                for (int j = i + 1; j < nums.Length; j++)
+                {
+                    if (delta == nums[j])
+                    {
+                        return new int[] { i, j };
+                    }
+                }
+            }
+            return new int[] { 0, 0 };
         }
     }
 }
