@@ -106,6 +106,59 @@ public class Solution
             }
             return new int[] { 0, 0 };
         }
+        int[] temp;
+        public int Rob(int[] nums)
+        {
+            if (nums.Length == 0) return 0;
+            if (nums.Length == 1)
+            {
+                return nums[0];
+            }
+            temp = new int[nums.Length + 2];
+            for (int i = 0; i < nums.Length;i++)
+            {
+                temp[i+2] = Math.Max(temp[i] + nums[i], temp[i + 1]);
+            }
+            return temp[temp.Length - 1];
+        }
+
+        private int RobSum(int[] nums, int houseIndex)
+        {
+            if (houseIndex < 0) return 0;
+            if (temp[houseIndex] != -1) return temp[houseIndex];
+            int a = RobSum(nums, houseIndex - 2)+nums[houseIndex];
+            int b = RobSum(nums, houseIndex - 3) + nums[houseIndex];
+            temp[houseIndex] = a > b ? a : b;
+            return temp[houseIndex];
+        }
+
+        public int LargestRectangleArea(int[] heights)
+        {
+            for (int i = 0; i < heights.Length; i++)
+            {
+                
+            }
+            return 0;
+        }
+
+        public bool IsSymmetric(TreeNode root)
+        {
+            return IsSymmetric(root, root);
+        }
+
+        private bool IsSymmetric(TreeNode a, TreeNode b)
+        {
+            if (a == null && b == null) return true;
+            if (a == null || b == null) return false;
+            if (a.val != b.val)
+            {
+                return false;
+            }
+            if (!IsSymmetric(a.left, b.right)) return false;
+            if (!IsSymmetric(a.right, b.left)) return false;
+            return true;
+        }
+
 
         public IList<bool> KidsWithCandies(int[] candies, int extraCandies)
         {
