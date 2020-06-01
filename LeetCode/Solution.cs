@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace LeetCode
@@ -104,6 +105,23 @@ public class Solution
                 }
             }
             return new int[] { 0, 0 };
+        }
+
+        public IList<bool> KidsWithCandies(int[] candies, int extraCandies)
+        {
+            //找到最大值
+            int max = 0;
+            for(int i = 0;i<candies.Length;i++)
+            {
+                if (candies[i] > max) max = candies[i];
+            }
+            var result = new List<bool>();
+            var min = max - extraCandies;
+            for(int i = 0;i<candies.Length;i++)
+            {
+                result.Add(candies[i] >= min);
+            }
+            return result;
         }
     }
 }

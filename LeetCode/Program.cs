@@ -7,8 +7,9 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            var solution = new Solution();
-            Console.WriteLine(solution.RomanToInt("MCMXCIV"));
+            //var solution = new Solution();
+            //Console.WriteLine(solution.RomanToInt("MCMXCIV"));
+            NonogramSolution.AllSplitResult(10, 4);
         }
 
         static void Main7(string[] args)
