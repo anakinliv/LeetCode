@@ -176,5 +176,24 @@ public class Solution
             }
             return result;
         }
+
+        public Dictionary<int, double> tempDic = new Dictionary<int, double>();
+
+        public double New21Game(int N, int K, int W)
+        {
+            if (K < 1)
+                return 1;
+            if (N < 1) 
+                return 0;
+            if (tempDic.ContainsKey(K)) return tempDic[K];
+            double result = 0;
+            for (int i = 1; i < K; i++)
+            {
+                result += (1d / W) * New21Game(N - i, K - i, W);
+            }
+            result += (Math.Min(N,W) - K + 1) * 1d / W;
+            tempDic[K] = result;
+            return result;
+        }
     }
 }
