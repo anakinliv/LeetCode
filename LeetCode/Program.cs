@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeetCode.Test;
+using System;
 using System.Diagnostics;
 
 namespace LeetCode
@@ -7,11 +8,14 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
+            //FixedTest.TestNew21Game(4, 3, 5);
             var solution = new Solution();
             //Console.WriteLine(solution.RomanToInt("MCMXCIV"));
+            //solution.tempDic.Clear();
+            //Console.WriteLine(solution.New21Game(5710, 5070, 8516));
             solution.tempDic.Clear();
+            Console.WriteLine(solution.New21Game(10, 8, 5));
             //Console.WriteLine(solution.New21Game(21, 17, 10));
-            Console.WriteLine(solution.New21Game(3, 2, 3));
             foreach (var kvp in solution.tempDic)
             {
                 Console.WriteLine($"{kvp.Key} : {kvp.Value}");

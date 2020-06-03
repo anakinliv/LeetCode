@@ -1,5 +1,8 @@
-﻿using System;
+﻿using LeetCode.Test;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
@@ -177,9 +180,15 @@ public class Solution
             return result;
         }
 
+        public int SumNums(int n)
+        {
+            var a = (n > 0) && ((n += SumNums(n-1)) > 0);
+            return n;
+        }
+        
         public Dictionary<int, double> tempDic = new Dictionary<int, double>();
 
-        public double New21Game(int N, int K, int W)
+        public double New21GameRe(int N, int K, int W)
         {
             if (K < 1)
                 return 1;
@@ -187,13 +196,71 @@ public class Solution
                 return 0;
             if (tempDic.ContainsKey(K)) return tempDic[K];
             double result = 0;
-            for (int i = 1; i < K; i++)
+            for (int i = 1; i < W+1; i++)
             {
-                result += (1d / W) * New21Game(N - i, K - i, W);
+                if(i < K)
+                {
+                    result += (1d / W) * New21GameRe(N - i, K - i, W);
+                }
+                else if(i <= N)
+                {
+                    result += 1d / W;
+                }
             }
-            result += (Math.Min(N,W) - K + 1) * 1d / W;
             tempDic[K] = result;
             return result;
+        }
+
+
+        public double New21Game(int N, int K, int W)
+        {
+            FixedTest.TestNew21Game(N, K, W);
+            if (K < 1)
+                return 1;
+            if (N < 1)
+                return 0;
+            double[] rates = new double[K + 1];
+            double singleRate = 1d / W;
+            for(int i = 1; i <= K; i++)
+            {
+                /*
+                for(int j = 1; j < i; j++)
+                {
+                    rates[i] += singleRate * rates[i - j];
+                }
+                if(N - K + i < W)
+                {
+                    rates[i] += (N - K + 1) * singleRate;
+                }
+                else
+                {
+                    rates[i] += (W - i + 1) * singleRate;
+                }
+                Console.WriteLine($"{i} ： {rates[i]}");
+                */
+                if(i == 1)
+                {
+                    rates[i] = Math.Min(N - K + 1, W) * singleRate;
+                }
+                else
+                {
+                    var temp = 0d;
+                    for(int j = Math.Max(1,i-W);j<Math.Min(W,i);j++)
+                    {
+                        temp += rates[i - j];
+                    }
+                    rates[i] += temp * singleRate;
+                    if (N - K + i < W)
+                    {
+                        rates[i] += (N - K + 1) * singleRate;
+                    }
+                    else
+                    {
+                        rates[i] += (W - i + 1) * singleRate;
+                    }
+                }
+            }
+            return rates[K];
         }
     }
 }
