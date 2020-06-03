@@ -223,21 +223,6 @@ public class Solution
             double singleRate = 1d / W;
             for(int i = 1; i <= K; i++)
             {
-                /*
-                for(int j = 1; j < i; j++)
-                {
-                    rates[i] += singleRate * rates[i - j];
-                }
-                if(N - K + i < W)
-                {
-                    rates[i] += (N - K + 1) * singleRate;
-                }
-                else
-                {
-                    rates[i] += (W - i + 1) * singleRate;
-                }
-                Console.WriteLine($"{i} ： {rates[i]}");
-                */
                 if(i == 1)
                 {
                     rates[i] = Math.Min(N - K + 1, W) * singleRate;
@@ -245,22 +230,66 @@ public class Solution
                 else
                 {
                     var temp = 0d;
-                    for(int j = Math.Max(1,i-W);j<Math.Min(W,i);j++)
+                    //待计算
+                    int j = 1;
+                    for(;j<Math.Min(i,W+1);j++)
                     {
                         temp += rates[i - j];
                     }
                     rates[i] += temp * singleRate;
-                    if (N - K + i < W)
+                    if (j == W + 1) continue;
+                    //安全区
+                    int newN = N - K + i;
+                    if (newN > W)
                     {
-                        rates[i] += (N - K + 1) * singleRate;
+                        rates[i] += (W - j + 1) * singleRate;
                     }
                     else
                     {
-                        rates[i] += (W - i + 1) * singleRate;
+                        rates[i] += (newN - j + 1) * singleRate;
                     }
                 }
+                Console.WriteLine($"{i} : {rates[i]}");
             }
             return rates[K];
+        }
+
+        public double New21GameCopy(int N, int K, int W)
+        {
+            if (K == 0)
+            {
+                return 1.0;
+            }
+            double[] dp = new double[K + W];
+            for (int i = K; i <= N && i < K + W; i++)
+            {
+                dp[i] = 1.0;
+            }
+            dp[K - 1] = 1.0 * Math.Min(N - K + 1, W) / W;
+            for (int i = K - 2; i >= 0; i--)
+            {
+                dp[i] = dp[i + 1] - (dp[i + W + 1] - dp[i + 1]) / W;
+            }
+            return dp[0];
+        }
+
+        public int[] ProductExceptSelf(int[] nums)
+        {
+            int[] front = new int[nums.Length];
+            int[] back = new int[nums.Length];
+            front[0] = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                front[i] = nums[i - 1] * front[i - 1];
+            }
+            back[nums.Length - 1] = 1;
+            int temp = 1;
+            for (int i = nums.Length - 2; i >= 0; i--)
+            {
+                temp *= nums[i + 1];
+                front[i] *= temp;
+            }
+            return front;
         }
     }
 }

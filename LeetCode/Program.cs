@@ -14,7 +14,7 @@ namespace LeetCode
             //solution.tempDic.Clear();
             //Console.WriteLine(solution.New21Game(5710, 5070, 8516));
             solution.tempDic.Clear();
-            Console.WriteLine(solution.New21Game(10, 8, 5));
+            Console.WriteLine(solution.New21Game(21, 17, 10));
             //Console.WriteLine(solution.New21Game(21, 17, 10));
             foreach (var kvp in solution.tempDic)
             {
