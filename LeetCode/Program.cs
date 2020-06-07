@@ -10,6 +10,21 @@ namespace LeetCode
         {
             //FixedTest.TestNew21Game(4, 3, 5);
             var solution = new Solution();
+
+            Console.WriteLine(solution.LongestConsecutive(new int[] { 1,2,0,1}));
+            return;
+
+            var input = new int[4][];
+            input[0] = new int[1] { 1 };
+            input[1] = new int[1] { 2 };
+            input[2] = new int[1] { 3 };
+            input[3] = new int[1] { 4 };
+            var result = solution.SpiralOrder(input);
+            Console.WriteLine(string.Join(",", result));
+
+            return;
+
+
             //Console.WriteLine(solution.RomanToInt("MCMXCIV"));
             //solution.tempDic.Clear();
             //Console.WriteLine(solution.New21Game(5710, 5070, 8516));

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
@@ -291,5 +292,100 @@ public class Solution
             }
             return front;
         }
+
+        public int[] SpiralOrder(int[][] matrix)
+        {
+            if (matrix.Length == 0 || matrix[0].Length == 0)
+            {
+                return new int[0];
+            }
+            int row = matrix.Length;
+            int column = matrix[0].Length;
+
+            int[] result = new int[row * column];
+
+            int roundNum = (Math.Min(row, column) + 1) / 2;
+            int i = 0;
+            for (int round = 0; round < roundNum; round++)
+            {
+                int c = round;
+                int r = round;
+                for (; c < column - round; c++)
+                {
+                    result[i] = matrix[r][c];
+                    i++;
+                }
+                c--;
+                r++;
+                for (; r < row - round; r++)
+                {
+                    result[i] = matrix[r][c];
+                    i++;
+                }
+                r--;
+                c--;
+                if (r == round)
+                    break;
+                for (; c >= round; c--)
+                {
+                    result[i] = matrix[r][c];
+                    i++;
+                }
+                c++;
+                r--;
+                if (c == column - round - 1)
+                    break;
+                for (; r > round; r--)
+                {
+                    result[i] = matrix[r][c];
+                    i++;
+                }
+            }
+
+            return result;
+        }
+
+        public int LongestConsecutive(int[] nums)
+        {
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (dic.ContainsKey(nums[i])) continue;
+                if (dic.ContainsKey(nums[i] + 1))
+                {
+                    dic[nums[i]] = dic[nums[i] + 1] + 1;
+                    dic[nums[i] + 1] = 0;
+                }
+                else
+                {
+                    dic[nums[i]] = 1;
+                }
+            }
+            int max = 0;
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (dic.ContainsKey(nums[i]))
+                {
+                    if (dic[nums[i]] == 0) continue;
+                    var next = nums[i] + dic[nums[i]];
+                    if (dic.ContainsKey(next))
+                    {
+                        dic[nums[i]] += dic[next];
+                        if (dic[nums[i]] > max)
+                            max = dic[nums[i]];
+                        dic.Remove(next);
+                        i--;
+                    }
+                    else
+                    {
+                        if (dic[nums[i]] > max)
+                            max = dic[nums[i]];
+                    }
+                }
+            }
+            return max;
+        }
+
+
     }
 }
