@@ -293,6 +293,40 @@ public class Solution
             return front;
         }
 
+        public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            var result = l1;
+            int up = 0;
+            int t = 0;
+            while(true)
+            {
+                t = l1.val + l2.val + up;
+                if(t >= 10)
+                {
+                    t -= 10;
+                    up = 1;
+                }
+                else
+                {
+                    up = 0;
+                }
+                l1.val = t;
+                if(l1.next == null)
+                {
+                    if(l2.next == null)
+                    {
+                        if(up == 1)
+                        {
+                            l1.next = new ListNode(1);
+                        }
+                        break;
+                    }
+                    l1.next = l2.next;
+                }
+            }
+            return result;
+        }
+        
         public int[] SpiralOrder(int[][] matrix)
         {
             if (matrix.Length == 0 || matrix[0].Length == 0)
