@@ -1,6 +1,7 @@
 ﻿using LeetCode.Test;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace LeetCode
 {
@@ -8,6 +9,11 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
+            int problemId = 739;
+            Type type = typeof(SolutionTester);
+            type.InvokeMember($"Test{problemId.ToString("D4")}", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public, null, null, new object[0]);
+            return;
+
             //FixedTest.TestNew21Game(4, 3, 5);
             var solution = new Solution();
 

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace LeetCode
 {
-public class Solution
+public partial class Solution
 {
     public int Reverse(int x)
     {
