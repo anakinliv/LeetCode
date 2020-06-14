@@ -9,7 +9,7 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            int problemId = 739;
+            int problemId = 15;
             Type type = typeof(SolutionTester);
             type.InvokeMember($"Test{problemId.ToString("D4")}", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public, null, null, new object[0]);
             return;
