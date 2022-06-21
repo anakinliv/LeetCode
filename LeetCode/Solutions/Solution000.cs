@@ -87,6 +87,10 @@ namespace LeetCode
             }
             return true;
         }
+        public string GenerateParentheses(int i)
+        {
+            return "";
+        }
     }
 
     public static partial class SolutionTester
@@ -123,6 +127,17 @@ namespace LeetCode
             Console.WriteLine($"{result} should be F");
             result = solution.IsValid("{[]}");
             Console.WriteLine($"{result} should be T");
+        }
+
+        /// <summary>
+        /// 22. 括号生成
+        /// https://leetcode.cn/problems/generate-parentheses/
+        /// </summary>
+        public static void Test0022()
+        {
+            var solution = new Solution();
+            var result = solution.GenerateParentheses(1);
+            Console.WriteLine($"{result} should be [\"()\"]");
         }
     }
 }
