@@ -87,9 +87,43 @@ namespace LeetCode
             }
             return true;
         }
-        public string GenerateParentheses(int i)
+        public string GenerateParentheses(int parentheseCount)
         {
+            var result= new StringBuilder();
+            var resultList = GenerateParentheseList(parentheseCount);
+            foreach(var element in resultList)
+            {
+                result.Append(element.ToString());
+                result.Append('(');
+            }
             return "";
+        }
+
+        readonly Dictionary <int,List<string>> generatedParentheseList = new Dictionary<int,List<string>>();
+        public List<string> GenerateParentheseList(int parentheseCount)
+        {
+            if (generatedParentheseList.TryGetValue(parentheseCount, out var generatedParenthese))
+            {
+                return generatedParenthese;
+            }
+
+            var result = new List<string>();
+            generatedParentheseList.Add(parentheseCount, result);
+            Queue<string> list = new Queue<string> ();
+            if (list.Count == 0)
+            {
+                list.Enqueue("(");
+            }
+            byte left = 0;
+            byte right = 0;
+            while (right < parentheseCount)
+            {
+                while(left < parentheseCount)
+                {
+
+                }
+            }
+            return result;
         }
     }
 
@@ -136,7 +170,7 @@ namespace LeetCode
         public static void Test0022()
         {
             var solution = new Solution();
-            var result = solution.GenerateParentheses(1);
+            var result = solution.GenerateParentheseList(1);
             Console.WriteLine($"{result} should be [\"()\"]");
         }
     }
