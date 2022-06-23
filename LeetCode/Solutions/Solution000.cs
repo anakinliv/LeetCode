@@ -87,42 +87,82 @@ namespace LeetCode
             }
             return true;
         }
-        public string GenerateParentheses(int parentheseCount)
-        {
-            var result= new StringBuilder();
-            var resultList = GenerateParentheseList(parentheseCount);
-            foreach(var element in resultList)
-            {
-                result.Append(element.ToString());
-                result.Append('(');
-            }
-            return "";
-        }
 
         readonly Dictionary <int,List<string>> generatedParentheseList = new Dictionary<int,List<string>>();
+        struct ParentheseNode
+        {
+            public int left;
+            public int right;
+            public string text;
+        }
+
+        readonly Dictionary<int, Stack<ParentheseNode>> treeDic = new Dictionary<int, Stack<ParentheseNode>>();
+
         public List<string> GenerateParentheseList(int parentheseCount)
         {
+            //缓存已经处理过的内容
             if (generatedParentheseList.TryGetValue(parentheseCount, out var generatedParenthese))
             {
                 return generatedParenthese;
             }
 
+            treeDic.Add(parentheseCount, new Stack<ParentheseNode>());
+            var tree = treeDic[parentheseCount];
             var result = new List<string>();
-            generatedParentheseList.Add(parentheseCount, result);
-            Queue<string> list = new Queue<string> ();
-            if (list.Count == 0)
-            {
-                list.Enqueue("(");
-            }
-            byte left = 0;
-            byte right = 0;
-            while (right < parentheseCount)
-            {
-                while(left < parentheseCount)
-                {
 
+            var node = new ParentheseNode() { left = 1, right = 0, text = "(" };
+            tree.Push(node);
+
+            while(tree.TryPop(out var currentNode))
+            {
+                if(currentNode.text.EndsWith("()"))
+                {
+                    if(currentNode.left == currentNode.right)
+                    {
+                        var lastResult = GenerateParentheseList(parentheseCount - currentNode.left);
+                        foreach(var item in lastResult)
+                        {
+                            result.Add(currentNode.text + item);
+                        }
+                        continue;
+                    }
+                }
+                if(currentNode.left > currentNode.right)
+                {
+                    //右边可以塞下括号
+                    if (currentNode.right + 1 == parentheseCount)
+                    {
+                        //已经放完了
+                        result.Add(currentNode.text + ")");
+                    }
+                    else
+                    {
+                        //右边加一个括号，继续便利
+                        var rightNode = new ParentheseNode() { left = currentNode.left, right = currentNode.right + 1, text = currentNode.text + ")" };
+                        tree.Push(rightNode);
+                    }
+                }
+                if(currentNode.left < parentheseCount)
+                {
+                    //左边可以塞下括号
+                    if(currentNode.left +1 == parentheseCount)
+                    {
+                        currentNode.text = currentNode.text + "(";
+                        //左括号已经放完了
+                        for(int i = currentNode.right; i < parentheseCount ; i++)
+                        {
+                            currentNode.text = currentNode.text + ")";
+                        }
+                        result.Add(currentNode.text);
+                    }
+                    else
+                    {
+                        var leftNode = new ParentheseNode() { left = currentNode.left + 1, right = currentNode.right, text = currentNode.text + "(" };
+                        tree.Push(leftNode);
+                    }
                 }
             }
+            generatedParentheseList.Add(parentheseCount, result);
             return result;
         }
     }
@@ -170,8 +210,39 @@ namespace LeetCode
         public static void Test0022()
         {
             var solution = new Solution();
+
+            //1
             var result = solution.GenerateParentheseList(1);
-            Console.WriteLine($"{result} should be [\"()\"]");
+            foreach (var r in result)
+            {
+                Console.WriteLine(string.Join(',', r));
+            }
+            Console.WriteLine($" should be [\"()\"]");
+
+            //2
+            result = solution.GenerateParentheseList(2);
+            foreach (var r in result)
+            {
+                Console.WriteLine(string.Join(',', r));
+            }
+            Console.WriteLine($" should be [(()),()()]");
+
+            //3
+            result = solution.GenerateParentheseList(3);
+            foreach (var r in result)
+            {
+                Console.WriteLine(string.Join(',', r));
+            }
+            Console.WriteLine($" should be [((())), (()()), (())(),()(()), ()()()]");
+
+            //4
+            result = solution.GenerateParentheseList(4);
+            foreach (var r in result)
+            {
+                Console.WriteLine(string.Join(',', r));
+            }
+            Console.WriteLine($" should be  [(((()))),((()())),((())()),((()))(),(()(())),(()()()),(()())(),(())(()),(())()(),()((())),()(()()),()(())(),()()(()),()()()()]");
+           
         }
     }
 }
