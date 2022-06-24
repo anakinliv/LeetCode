@@ -12,16 +12,16 @@ namespace LeetCode
             Dictionary<int, int> dic = new Dictionary<int, int>();
             Array.Sort(nums);
             int lasti = 1;
-            for(int i = 0;i<nums.Length-2;i++)
+            for (int i = 0; i < nums.Length - 2; i++)
             {
                 if (nums[i] == lasti) continue;
                 else lasti = nums[i];
                 if (lasti > 0) break;
                 int j = i + 1;
                 int k = nums.Length - 1;
-                while( k > j )
+                while (k > j)
                 {
-                    if(nums[j] + nums[k] > -nums[i])
+                    if (nums[j] + nums[k] > -nums[i])
                     {
                         var last = nums[k];
                         do
@@ -53,9 +53,9 @@ namespace LeetCode
         public bool IsValid(string s)
         {
             Stack<char> stack = new Stack<char>();
-            foreach(var character in s)
+            foreach (var character in s)
             {
-                if(character == '(' ||
+                if (character == '(' ||
                     character == '[' ||
                     character == '{')
                 {
@@ -63,12 +63,12 @@ namespace LeetCode
                 }
                 else
                 {
-                    if(stack.TryPop(out char last))
+                    if (stack.TryPop(out char last))
                     {
-                        switch(last)
+                        switch (last)
                         {
                             case '(':
-                                if (character != ')') return false;break;
+                                if (character != ')') return false; break;
                             case '[':
                                 if (character != ']') return false; break;
                             case '{':
@@ -81,14 +81,14 @@ namespace LeetCode
                     }
                 }
             }
-            if(stack.TryPop(out var a))
+            if (stack.TryPop(out var a))
             {
                 return false;
             }
             return true;
         }
 
-        readonly Dictionary <int,List<string>> generatedParentheseList = new Dictionary<int,List<string>>();
+        readonly Dictionary<int, List<string>> generatedParentheseList = new Dictionary<int, List<string>>();
         struct ParentheseNode
         {
             public int left;
@@ -98,6 +98,11 @@ namespace LeetCode
 
         readonly Dictionary<int, Stack<ParentheseNode>> treeDic = new Dictionary<int, Stack<ParentheseNode>>();
 
+        /// <summary>
+        /// 递归法，剪枝还不够
+        /// </summary>
+        /// <param name="parentheseCount"></param>
+        /// <returns></returns>
         public List<string> GenerateParentheseList(int parentheseCount)
         {
             //缓存已经处理过的内容
@@ -113,21 +118,18 @@ namespace LeetCode
             var node = new ParentheseNode() { left = 1, right = 0, text = "(" };
             tree.Push(node);
 
-            while(tree.TryPop(out var currentNode))
+            while (tree.TryPop(out var currentNode))
             {
-                if(currentNode.text.EndsWith("()"))
+                if (currentNode.left == currentNode.right)
                 {
-                    if(currentNode.left == currentNode.right)
+                    var lastResult = GenerateParentheseList(parentheseCount - currentNode.left);
+                    foreach (var item in lastResult)
                     {
-                        var lastResult = GenerateParentheseList(parentheseCount - currentNode.left);
-                        foreach(var item in lastResult)
-                        {
-                            result.Add(currentNode.text + item);
-                        }
-                        continue;
+                        result.Add(currentNode.text + item);
                     }
+                    continue;
                 }
-                if(currentNode.left > currentNode.right)
+                if (currentNode.left > currentNode.right)
                 {
                     //右边可以塞下括号
                     if (currentNode.right + 1 == parentheseCount)
@@ -142,14 +144,14 @@ namespace LeetCode
                         tree.Push(rightNode);
                     }
                 }
-                if(currentNode.left < parentheseCount)
+                if (currentNode.left < parentheseCount)
                 {
                     //左边可以塞下括号
-                    if(currentNode.left +1 == parentheseCount)
+                    if (currentNode.left + 1 == parentheseCount)
                     {
                         currentNode.text = currentNode.text + "(";
                         //左括号已经放完了
-                        for(int i = currentNode.right; i < parentheseCount ; i++)
+                        for (int i = currentNode.right; i < parentheseCount; i++)
                         {
                             currentNode.text = currentNode.text + ")";
                         }
@@ -165,6 +167,49 @@ namespace LeetCode
             generatedParentheseList.Add(parentheseCount, result);
             return result;
         }
+
+        /// <summary>
+        /// 递归法，第一个间隔
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public List<string> GenerateParenthesis(int n)
+        {
+            //返回已经处理过的内容
+            if (generatedParentheseList.TryGetValue(n, out var generatedParenthese))
+            {
+                return generatedParenthese;
+            }
+            if(n == 0)
+            {
+                var resultT = new List<string>() { "" };
+                generatedParentheseList.Add(0, resultT);
+                return resultT;
+            }
+            if (n == 1)
+            {
+                var resultT = new List<string>() { "()" };
+                generatedParentheseList.Add(1, resultT);
+                return resultT;
+            }
+
+            var result = new List<string>();
+            for (int i = n - 1; i >= 0; i--)
+            {
+                var leftList = GenerateParenthesis(i);
+                for(int j = 0; j < leftList.Count; j++)
+                {
+                    string left = $"({leftList[j]})";
+                    var rightList = GenerateParenthesis(n - i - 1);
+                    for(int k = 0; k < rightList.Count; k++)
+                    {
+                        result.Add($"{left}{rightList[k]}");
+                    }
+                }
+            }
+            generatedParentheseList.Add(n, result);
+            return result;
+        }
     }
 
     public static partial class SolutionTester
@@ -176,8 +221,8 @@ namespace LeetCode
         public static void Test0015()
         {
             var solution = new Solution();
-            var result = solution.ThreeSum(new int[] { -1, 0, 1, 2, -1, -4});
-            foreach(var r in result)
+            var result = solution.ThreeSum(new int[] { -1, 0, 1, 2, -1, -4 });
+            foreach (var r in result)
             {
                 Console.WriteLine(string.Join(',', r));
             }
@@ -212,7 +257,7 @@ namespace LeetCode
             var solution = new Solution();
 
             //1
-            var result = solution.GenerateParentheseList(1);
+            var result = solution.GenerateParenthesis(1);
             foreach (var r in result)
             {
                 Console.WriteLine(string.Join(',', r));
@@ -220,7 +265,7 @@ namespace LeetCode
             Console.WriteLine($" should be [\"()\"]");
 
             //2
-            result = solution.GenerateParentheseList(2);
+            result = solution.GenerateParenthesis(2);
             foreach (var r in result)
             {
                 Console.WriteLine(string.Join(',', r));
@@ -228,7 +273,7 @@ namespace LeetCode
             Console.WriteLine($" should be [(()),()()]");
 
             //3
-            result = solution.GenerateParentheseList(3);
+            result = solution.GenerateParenthesis(3);
             foreach (var r in result)
             {
                 Console.WriteLine(string.Join(',', r));
@@ -236,13 +281,13 @@ namespace LeetCode
             Console.WriteLine($" should be [((())), (()()), (())(),()(()), ()()()]");
 
             //4
-            result = solution.GenerateParentheseList(4);
+            result = solution.GenerateParenthesis(4);
             foreach (var r in result)
             {
                 Console.WriteLine(string.Join(',', r));
             }
             Console.WriteLine($" should be  [(((()))),((()())),((())()),((()))(),(()(())),(()()()),(()())(),(())(()),(())()(),()((())),()(()()),()(())(),()()(()),()()()()]");
-           
+
         }
     }
 }
