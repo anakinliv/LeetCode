@@ -210,6 +210,16 @@ namespace LeetCode
             generatedParentheseList.Add(n, result);
             return result;
         }
+
+        /// <summary>
+        /// 动态规划
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public List<string> GenerateParenthesis(int n,bool check)
+        {
+            return null;
+        }
     }
 
     public static partial class SolutionTester
