@@ -180,7 +180,7 @@ namespace LeetCode
             {
                 return generatedParenthese;
             }
-            if(n == 0)
+            if (n == 0)
             {
                 var resultT = new List<string>() { "" };
                 generatedParentheseList.Add(0, resultT);
@@ -197,11 +197,11 @@ namespace LeetCode
             for (int i = n - 1; i >= 0; i--)
             {
                 var leftList = GenerateParenthesis(i);
-                for(int j = 0; j < leftList.Count; j++)
+                for (int j = 0; j < leftList.Count; j++)
                 {
                     string left = $"({leftList[j]})";
                     var rightList = GenerateParenthesis(n - i - 1);
-                    for(int k = 0; k < rightList.Count; k++)
+                    for (int k = 0; k < rightList.Count; k++)
                     {
                         result.Add($"{left}{rightList[k]}");
                     }
@@ -216,14 +216,73 @@ namespace LeetCode
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public List<string> GenerateParenthesis(int n,bool check)
+        public List<string> GenerateParenthesis(int n, bool check)
         {
             return null;
+        }
+
+        /// <summary>
+        /// 正则表达式匹配
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public bool IsMatch(string s, string p)
+        {
+            if (s == null || p == null) return false;
+            if (s.Length == 0 || p.Length == 0) return false;
+            int sIndex = 0;
+            int pIndex = 0;
+            char lastP = ' ';
+            for (; sIndex < s.Length; sIndex++,pIndex++)
+            {
+                if (pIndex >= p.Length) return false;
+                var currentP = p[sIndex];
+                if(currentP == '*')
+                {
+                    if (lastP == '.' || s[sIndex] == lastP)
+                    {
+                        pIndex--;
+                        continue;
+                    }
+                }
+                else if(currentP == '.' || currentP == s[sIndex])
+                {
+                    lastP = currentP;
+                    continue;
+                }
+                return false;
+            }
+
+            return pIndex == p.Length || (pIndex == p.Length -1 && p[pIndex] == '*');
         }
     }
 
     public static partial class SolutionTester
     {
+        /// <summary>
+        /// 10. 正则表达式匹配
+        /// https://leetcode.cn/problems/regular-expression-matching/
+        /// </summary>
+        public static void Test0010()
+        {
+            var solution = new Solution();
+            var result = solution.IsMatch("aa", "a");
+            Console.WriteLine($"{result} should be false");
+            result = solution.IsMatch("aa", "a*");
+            Console.WriteLine($"{result} should be true");
+            result = solution.IsMatch("ab", ".*");
+            Console.WriteLine($"{result} should be true");
+            result = solution.IsMatch("aaaaaaab", "a*b");
+            Console.WriteLine($"{result} should be true");
+            result = solution.IsMatch("abc", "a*b*c");
+            Console.WriteLine($"{result} should be true");
+            result = solution.IsMatch("aaaaaaab", "a*ab");
+            Console.WriteLine($"{result} should be true");
+            result = solution.IsMatch("abababababab", "a.*ab");
+            Console.WriteLine($"{result} should be true");
+        }
+
         /// <summary>
         /// 15. 三数之和
         /// https://leetcode-cn.com/problems/3sum/
