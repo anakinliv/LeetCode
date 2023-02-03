@@ -256,6 +256,11 @@ namespace LeetCode
 
             return pIndex == p.Length || (pIndex == p.Length -1 && p[pIndex] == '*');
         }
+
+        public bool IsValidSudoku(char[][] board)
+        {
+            return true;
+        }
     }
 
     public static partial class SolutionTester
@@ -357,6 +362,16 @@ namespace LeetCode
             }
             Console.WriteLine($" should be  [(((()))),((()())),((())()),((()))(),(()(())),(()()()),(()())(),(())(()),(())()(),()((())),()(()()),()(())(),()()(()),()()()()]");
 
+        }
+
+        /// <summary>
+        /// 36. 有效的数独
+        /// https://leetcode.cn/problems/valid-sudoku/
+        /// </summary>
+        public static void Test0036()
+        {
+            var solution = new Solution();
+            char[,] chars = new char[,] {{'a','a' },{'a','b' } };
         }
     }
 }

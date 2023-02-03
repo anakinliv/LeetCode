@@ -6,6 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using LeetCode.Define;
 
 namespace LeetCode
 {
