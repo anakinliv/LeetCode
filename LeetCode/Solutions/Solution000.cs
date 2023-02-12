@@ -234,11 +234,11 @@ namespace LeetCode
             int sIndex = 0;
             int pIndex = 0;
             char lastP = ' ';
-            for (; sIndex < s.Length; sIndex++,pIndex++)
+            for (; sIndex < s.Length; sIndex++, pIndex++)
             {
                 if (pIndex >= p.Length) return false;
                 var currentP = p[sIndex];
-                if(currentP == '*')
+                if (currentP == '*')
                 {
                     if (lastP == '.' || s[sIndex] == lastP)
                     {
@@ -246,7 +246,7 @@ namespace LeetCode
                         continue;
                     }
                 }
-                else if(currentP == '.' || currentP == s[sIndex])
+                else if (currentP == '.' || currentP == s[sIndex])
                 {
                     lastP = currentP;
                     continue;
@@ -254,12 +254,131 @@ namespace LeetCode
                 return false;
             }
 
-            return pIndex == p.Length || (pIndex == p.Length -1 && p[pIndex] == '*');
+            return pIndex == p.Length || (pIndex == p.Length - 1 && p[pIndex] == '*');
+        }
+
+        public bool IsValidSudoku_Iter(char[][] board)
+        {
+            //行检查
+            HashSet<char> visitedH = new HashSet<char>();
+            //列检查
+            HashSet<char> visitedV = new HashSet<char>();
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board.Length; j++)
+                {
+                    if (board[i][j] != '.')
+                    {
+                        if (visitedH.Contains(board[i][j]))
+                        {
+                            return false;
+                        }
+                        visitedH.Add(board[i][j]);
+                    }
+                    if (board[j][i] != '.')
+                    {
+                        if (visitedV.Contains(board[j][i]))
+                        {
+                            return false;
+                        }
+                        visitedV.Add(board[j][i]);
+                    }
+                }
+                visitedH.Clear();
+                visitedV.Clear();
+            }
+
+            //格子检查
+            for (int gi = 0; gi < 3; gi++)
+            {
+                for (int gj = 0; gj < 3; gj++)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            if (board[gi * 3 + i][gj * 3 + j] != '.')
+                            {
+                                if (visitedH.Contains(board[gi * 3 + i][gj * 3 + j]))
+                                {
+                                    return false;
+                                }
+                                visitedH.Add(board[gi * 3 + i][gj * 3 + j]);
+                            }
+                        }
+                    }
+                    visitedH.Clear();
+                }
+            }
+
+            return true;
         }
 
         public bool IsValidSudoku(char[][] board)
         {
+            bool[,] hLineCheck = new bool[9, 9];
+            bool[,] vLineCheck = new bool[9, 9];
+            bool[,] boxCheck = new bool[9, 9];
+            for(int i = 0; i < 9;i++)
+            {
+                for(int j = 0;j<9;j++)
+                {
+                    if (board[i][j] == '.') continue;
+                    int num = board[i][j] - '1';
+                    int boxIndex = i / 3 * 3 + j / 3;
+                    if (hLineCheck[i, num] || vLineCheck[j, num] || boxCheck[boxIndex, num]) return false;
+                    hLineCheck[i, num] = true;
+                    vLineCheck[j, num] = true;
+                    boxCheck[boxIndex, num] = true;
+                }
+            }
             return true;
+        }
+
+        public int UniquePaths(int m, int n)
+        {
+            int[,] path = new int[m, n];
+            for(int i = 0; i < m;i++)
+            {
+                for(int j = 0; j < n;j++)
+                {
+                    if (i == 0 || j == 0) path[i, j] = 1;
+                    else path[i, j] = path[i - 1, j] + path[i, j - 1];
+                }
+            }
+            return path[m - 1, n - 1];
+        }
+
+        public int UniquePathsWithObstacles(int[][] obstacleGrid)
+        {
+            int m = obstacleGrid.Length;
+            int n = obstacleGrid[0].Length;
+            int[,] path = new int[m, n];
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (obstacleGrid[i][j] == 1)
+                    {
+                        path[i, j] = 0;
+                        continue;
+                    }
+                    if (i == 0 && j == 0) path[i, j] = 1;
+                    else if (i == 0)
+                    {
+                        path[i, j] = path[i, j - 1];
+                    }
+                    else if (j == 0)
+                    {
+                        path[i, j] = path[i - 1, j];
+                    }
+                    else
+                    {
+                        path[i, j] = path[i - 1, j] + path[i, j - 1];
+                    }
+                }
+            }
+            return path[m - 1, n - 1];
         }
     }
 
@@ -371,7 +490,75 @@ namespace LeetCode
         public static void Test0036()
         {
             var solution = new Solution();
-            char[,] chars = new char[,] {{'a','a' },{'a','b' } };
+            char[][] chars = {
+                new char[] { '5', '3', '.', '.', '7', '.', '.', '.', '.' },
+                new char[] { '6', '.', '.', '1', '9', '5', '.', '.', '.' },
+                new char[] { '.', '9', '8', '.', '.', '.', '.', '6', '.' },
+                new char[] { '8', '.', '.', '.', '6', '.', '.', '.', '3' },
+                new char[] { '4', '.', '.', '8', '.', '3', '.', '.', '1' },
+                new char[] { '7', '.', '.', '.', '2', '.', '.', '.', '6' },
+                new char[] { '.', '6', '.', '.', '.', '.', '2', '8', '.' },
+                new char[] { '.', '.', '.', '4', '1', '9', '.', '.', '5' },
+                new char[] { '.', '.', '.', '.', '8', '.', '.', '7', '9' }
+            };
+
+            bool result = solution.IsValidSudoku(chars);
+            Console.WriteLine($"{result} should be [TRUE]");
+
+            chars = new char[][]{
+                new char[] { '8', '3', '.', '.', '7', '.', '.', '.', '.' },
+                new char[] { '6', '.', '.', '1', '9', '5', '.', '.', '.' },
+                new char[] { '.', '9', '8', '.', '.', '.', '.', '6', '.' },
+                new char[] { '8', '.', '.', '.', '6', '.', '.', '.', '3' },
+                new char[] { '4', '.', '.', '8', '.', '3', '.', '.', '1' },
+                new char[] { '7', '.', '.', '.', '2', '.', '.', '.', '6' },
+                new char[] { '.', '6', '.', '.', '.', '.', '2', '8', '.' },
+                new char[] { '.', '.', '.', '4', '1', '9', '.', '.', '5' },
+                new char[] { '.', '.', '.', '.', '8', '.', '.', '7', '9' }
+            };
+
+            result = solution.IsValidSudoku(chars);
+            Console.WriteLine($"{result} should be [FALSE]");
+        }
+
+        public static void Test0062()
+        {
+            Solution solution = new Solution();
+
+            int result = solution.UniquePaths(3, 7);
+            Console.WriteLine($"{result} should be [28]");
+
+            result = solution.UniquePaths(3, 2);
+            Console.WriteLine($"{result} should be [3]");
+
+            result = solution.UniquePaths(7, 3);
+            Console.WriteLine($"{result} should be [28]");
+
+            result = solution.UniquePaths(3, 3);
+            Console.WriteLine($"{result} should be [6]");
+        }
+
+        public static void Test0063()
+        {
+            Solution solution = new Solution();
+            
+            //1
+            int[][] obstacleGrid =
+            {
+                new int[] {0, 0, 0},
+                new int[] {0, 1, 0},
+                new int[] {0, 0, 0}
+            };
+            int result = solution.UniquePathsWithObstacles(obstacleGrid);
+            Console.WriteLine($"{result} should be [2]");
+
+            //2
+            obstacleGrid = new int[][] {
+                new int[] {0, 1},
+                new int[] {0, 0}
+            };
+            result = solution.UniquePathsWithObstacles(obstacleGrid);
+            Console.WriteLine($"{result} should be [1]");
         }
     }
 }

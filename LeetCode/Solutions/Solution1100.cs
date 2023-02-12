@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Xml.Linq;
 using LeetCode.Define;
@@ -195,6 +196,45 @@ namespace LeetCode
             }
             return lCount + rCount + 1;
         }
+
+
+        public string AlphabetBoardPath(string target)
+        {
+            StringBuilder sb = new StringBuilder();
+            var currentX = 0;
+            var currentY = 0;
+            for (int i = 0; i < target.Length; i++)
+            {
+                char targetChar = target[i];
+                var targetX = (targetChar - 'a') % 5;
+                var targetY = (targetChar - 'a') / 5;
+
+                //有上先上，有左先左
+                for(int j = 0; j < currentY - targetY; j++)
+                {
+                    sb.Append('U');
+                }
+
+                for (int j = 0; j < currentX - targetX; j++)
+                {
+                    sb.Append('L');
+                }
+
+                for (int j = 0; j < targetY - currentY; j++)
+                {
+                    sb.Append('D');
+                }
+
+                for (int j = 0; j < targetX - currentX; j++)
+                {
+                    sb.Append('R');
+                }
+                sb.Append('!');
+                currentX = targetX;
+                currentY = targetY;
+            }
+            return sb.ToString();
+        }
     }
 
     public static partial class SolutionTester
@@ -266,6 +306,23 @@ namespace LeetCode
             resultInfo.Clear();
         }
 
+        public static void Test1138()
+        {
+            Solution solution = new Solution();
+
+            //1
+            string result = solution.AlphabetBoardPath("leet");
+            Console.WriteLine($"{result}  should be [DDR!UURRR!!DDD!]");
+
+            //2
+            result = solution.AlphabetBoardPath("code");
+            Console.WriteLine($"{result}  should be [RR!DDRR!UUL!R!]");
+        }
+
+        /// <summary>
+        /// 1145. 二叉树着色游戏
+        /// https://leetcode.cn/problems/binary-tree-coloring-game/
+        /// </summary>
         public static void Test1145()
         {
             Solution solution = new Solution();

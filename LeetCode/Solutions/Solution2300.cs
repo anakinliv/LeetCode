@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LeetCode.Define;
 
 namespace LeetCode
 {
@@ -47,6 +48,25 @@ namespace LeetCode
             }
             return sb.ToString();
         }
+
+        public bool EvaluateTree(TreeNode root)
+        {
+            if(root == null) return false;
+            switch(root.val)
+            {
+                case 0: return false;
+                case 1: return true;
+                case 2: return EvaluateTree(root.left) || EvaluateTree(root.right);
+                case 3: return EvaluateTree(root.left) && EvaluateTree(root.right);
+            }
+            return false;
+        }
+
+        public int FillCups(int[] amount)
+        {
+            int half = (int)Math.Ceiling((amount[0] + amount[1] + amount[2]) / 2f);
+            return Math.Max(Math.Max(amount[0], half), Math.Max(amount[1], amount[2]));
+        }
     }
 
     public static partial class SolutionTester
@@ -70,6 +90,10 @@ namespace LeetCode
             Console.WriteLine($"{result} should be [False]");
         }
 
+        /// <summary>
+        /// 2325. 解密消息
+        /// https://leetcode.cn/problems/decode-the-message/
+        /// </summary>
         public static void Test2325()
         {
             var solution = new Solution();
@@ -85,6 +109,48 @@ namespace LeetCode
             message = "zwx hnfx lqantp mnoeius ycgk vcnjrdb";
             result = solution.DecodeMessage(key, message);
             Console.WriteLine($"{result} should be [the five boxing wizards jump quickly]");
+        }
+
+        /// <summary>
+        /// 2331. 计算布尔二叉树的值
+        /// https://leetcode.cn/problems/evaluate-boolean-binary-tree/
+        /// </summary>
+        public static void Test2331()
+        {
+            var solution = new Solution();
+            bool result;
+
+            //1
+            var root = new TreeNode(new List<object>() { 2, 1, 3, null, null, 0, 1 });
+            result = solution.EvaluateTree(root);
+            Console.WriteLine($"{result} should be [TRUE]");
+
+            //2
+            root = new TreeNode(new List<object>() { 0 });
+            result = solution.EvaluateTree(root);
+            Console.WriteLine($"{result} should be [FALSE]");
+        }
+
+        /// <summary>
+        /// 2335. 装满杯子需要的最短总时长
+        /// https://leetcode.cn/problems/minimum-amount-of-time-to-fill-cups/
+        /// </summary>
+        public static void Test2335()
+        {
+            var solution = new Solution();
+            int result;
+
+            //1
+            result = solution.FillCups(new int[] { 1, 4, 2 });
+            Console.WriteLine($"{result} should be [4]");
+
+            //2
+            result = solution.FillCups(new int[] { 5, 4, 4 });
+            Console.WriteLine($"{result} should be [7]");
+
+            //3
+            result = solution.FillCups(new int[] { 5, 0, 0 });
+            Console.WriteLine($"{result} should be [5]");
         }
     }
 }

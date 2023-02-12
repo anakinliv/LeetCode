@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LeetCode.Define;
 
-namespace LeetCode.Solutions
+namespace LeetCode
 {
     public partial class Solution
     {
@@ -59,6 +60,51 @@ namespace LeetCode.Solutions
             return result;
         }
 
+        public char[][] UpdateBoard(char[][] board, int[] click)
+        {
+            char clickedSquare = board[click[0]][click[1]];
+            switch(clickedSquare)
+            {
+                case 'E':
+                    UpdateBoardDFS(board, click);
+                    break;
+                case 'M':
+                    board[click[0]][click[1]] = 'X';
+                    break;
+            }
+            return board;
+        }
+
+        int[] dir_x = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] dir_y = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+        public void UpdateBoardDFS(char[][] board, int[] click)
+        {
+            int mineCount = 0;
+            for(int i = 0; i < dir_x.Length; i++)
+            {
+                int x = click[0] + dir_x[i];
+                int y = click[1] + dir_y[i];
+                if (x < 0 || y < 0 || x >= board.Length || y >= board[0].Length) continue;
+                if (board[x][y] == 'M') mineCount++;
+            }
+            if(mineCount > 0)
+            {
+                board[click[0]][click[1]] = (char)(mineCount + '0');
+            }
+            else
+            {
+                board[click[0]][click[1]] = 'B';
+                for (int i = 0; i < dir_x.Length; i++)
+                {
+                    int x = click[0] + dir_x[i];
+                    int y = click[1] + dir_y[i];
+                    if (x < 0 || y < 0 || x >= board.Length || y >= board[0].Length) continue;
+                    if (board[x][y] == 'E')
+                        UpdateBoardDFS(board, new int[] { x, y });
+                }
+            }
+        }
     }
 
     public static partial class SolutionTester
@@ -67,19 +113,32 @@ namespace LeetCode.Solutions
         {
 
         }
-    }
 
-    //Definition for a binary tree node.
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+        /// <summary>
+        /// 529. 扫雷游戏
+        /// https://leetcode.cn/problems/minesweeper/
+        /// </summary>
+        public static void Test0529()
         {
-            this.val = val;
-            this.left = left;
-            this.right = right;
+            Solution solution = new Solution();
+
+            char[][] board =
+            {
+                new char[]{ 'E', 'E', 'E', 'E', 'E' },
+                new char[]{ 'E', 'E', 'M', 'E', 'E' },
+                new char[]{ 'E', 'E', 'E', 'E', 'E' },
+                new char[]{ 'E', 'E', 'E', 'E', 'E' }
+            };
+            int[] click =
+            {
+                3,0
+            };
+            var result = solution.UpdateBoard(board, click);
+
+            foreach(var chars in result)
+            {
+                Console.WriteLine(string.Join(' ', chars));
+            }
         }
     }
 }
